@@ -11,6 +11,10 @@
   "description": "NativeScript Application",
   "license": "SEE LICENSE IN 'LICENCE' file",
   "repository": "https://github.com/ingelity/nativescript-dictionary",
+  "scripts": {
+    "start": "tns run android",
+    "build": "tns build android --compileSdk 23"
+  },
   "dependencies": {
     "nativescript-permissions": "^1.2.3",
     "nativescript-theme-core": "~1.0.4",
