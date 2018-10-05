@@ -1,12 +1,63 @@
-<Page class="page"
-    navigatingTo="onNavigatingTo"  
-    xmlns="http://schemas.nativescript.org/tns.xsd">
-
-    <ActionBar class="action-bar">
-        <Label class="action-bar-title" text="Home"></Label>
+<Page
+    class="page"
+    id="page"
+    navigatingTo="onNavigatingTo"
+    xmlns="http://schemas.nativescript.org/tns.xsd"
+>
+    <ActionBar class="actionBar">
+        <ActionItem
+            tap="{{ onAddTap }}"
+            ios.position="left"
+            ios.systemIcon="7"
+            android.systemIcon="ic_menu_compose"
+        />
+        <TextField
+            id="search"
+            class="input input-border"
+            autocorrect="false"
+            autocapitalizationType="none"
+            text="{{ searchTerm }}"
+            hint="{{ searchHint }}"
+            width="300"
+            keyboardType="{{ searchInputType }}"
+            returnPress="{{ onSearchEnterKeyPress }}"
+        />
+        <ActionItem
+            tap="{{ onStrongToggle }}"
+            ios.position="right"
+            ios.systemIcon="13"
+            android.systemIcon="ic_menu_refresh"
+        />
     </ActionBar>
-
-    <GridLayout>
-        <!-- Add your page content here -->
-    </GridLayout>
+    <ScrollView>
+        <ListView
+            id="listView"
+            class="list-group"
+            items="{{ filteredItems }}"
+            itemTap="{{ onItemTap }}"
+            doubleTap="{{ onItemDoubleTap }}"
+            longPress="{{ onItemLongPress }}"
+        >
+            <ListView.itemTemplate>
+                <FlexboxLayout
+                    flexDirection="row"
+                    class="{{ isStrong ? 'strong list-group-item' : 'list-group-item' }}"
+                >
+                    <Label
+                        text="{{ index }}"
+                        class="list-group-item-heading number"
+                        verticalAlignment="center"
+                        flexShrink="0"
+                        style="margin-right: 20px"
+                    />
+                    <Label
+                        text="{{ value }}"
+                        class="list-group-item-heading word"
+                        verticalAlignment="center"
+                        flexGrow="1"
+                    />
+                </FlexboxLayout>
+            </ListView.itemTemplate>
+        </ListView>
+    </ScrollView>
 </Page>
