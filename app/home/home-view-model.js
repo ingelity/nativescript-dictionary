@@ -12,6 +12,7 @@ function HomeViewModel() {
     let isFileLoaded = true;
     let file;
     let lastTappedItem;
+    let isLongPress = false;
     let isAdd = false;
 
     app.on(app.suspendEvent, saveFile);
@@ -91,6 +92,10 @@ function HomeViewModel() {
             viewModel.set('searchTerm', '');
             args.object.page.getViewById('search').dismissSoftInput();
         },
+        onItemLongPress: function () {
+            isLongPress = true;
+        },
+
         onSearchEnterKeyPress: function () {
             const lineNo = viewModel.get('searchTerm');
             const items = viewModel.get('items');
@@ -108,6 +113,14 @@ function HomeViewModel() {
             viewModel.set('searchHint', 'word search');
             viewModel.set('searchTerm', '');
         }
+    });
+
+    function handleItemLongPress(args) {
+        viewModel.set('searchInputType', 'number');
+        viewModel.set('searchHint', 'line number to copy to');
+        args.object.page.getViewById('search').focus();
+    }
+
     function updateLines(text) {
         const items = text.split('\n').map((line, index) => {
             const isStrong = line[0] === '!';
