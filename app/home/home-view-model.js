@@ -11,6 +11,7 @@ function HomeViewModel() {
     let filePath = `${downloadDirPath}/dictionary.txt`;
     let isFileLoaded = true;
     let file;
+    let isAdd = false;
 
     app.on(app.suspendEvent, saveFile);
 
@@ -62,6 +63,22 @@ function HomeViewModel() {
         searchTerm: '',
         items: [],
         filteredItems: [],
+        searchHint: 'word search',
+        onAddTap: function (args) {
+            if (!isFileLoaded) return loadFile();
+
+            const searchEl = args.object.page.getViewById('search');
+
+            if (isAdd) {
+                isAdd = false;
+                viewModel.set('searchHint', 'word search');
+                return searchEl.dismissSoftInput();
+            }
+
+            isAdd = true;
+            viewModel.set('searchHint', 'type your new word');
+            searchEl.focus();
+        },
     function updateLines(text) {
         const items = text.split('\n').map((line, index) => {
             const isStrong = line[0] === '!';
@@ -77,6 +94,7 @@ function HomeViewModel() {
 
     viewModel.on(observable.Observable.propertyChangeEvent, (propChangeData) => {
         if (propChangeData.propertyName === 'searchTerm'
+            && !isAdd
         ) {
             const term = propChangeData.value.toLowerCase();
             const items = viewModel.items.filter(({ value }) =>
