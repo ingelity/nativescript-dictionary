@@ -92,6 +92,16 @@ function HomeViewModel() {
             viewModel.set('searchTerm', '');
             args.object.page.getViewById('search').dismissSoftInput();
         },
+        onItemDoubleTap: function (args) {
+            const context = args.object.bindingContext;
+            const items = context.get('items')
+                .filter(({ index }) => index !== lastTappedItem.index)
+                .map((item, index) => ({ ...item, index: index + 1 }));
+
+            context.set('items', items);
+            context.set('filteredItems', items);
+        },
+
         onItemLongPress: function () {
             isLongPress = true;
         },
