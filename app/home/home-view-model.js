@@ -1,5 +1,6 @@
 const fs = require('tns-core-modules/file-system');
 const observable = require('data/observable');
+const permissions = require('nativescript-permissions');
 
 function HomeViewModel() {
     const env = android.os.Environment;
@@ -9,6 +10,10 @@ function HomeViewModel() {
     let filePath = `${downloadDirPath}/dictionary.txt`;
     let isFileLoaded = true;
     let file;
+    permissions.requestPermission([
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    ]).then(loadFile);
 
     function loadFile() {
         const path = viewModel.get('searchTerm') || filePath;
