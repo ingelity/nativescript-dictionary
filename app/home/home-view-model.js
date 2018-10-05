@@ -27,6 +27,7 @@ function HomeViewModel() {
     app.on(app.uncaughtErrorEvent, (args) => {
         console.log('app uncaught error', args.error);
     });
+
     permissions.requestPermission([
         android.Manifest.permission.READ_EXTERNAL_STORAGE,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -49,6 +50,7 @@ function HomeViewModel() {
             .then(res => updateLines(res))
             .catch(err => console.log('file read err', err));
     }
+
     function saveFile() {
         if (!file) return console.log('File not loaded');
 
@@ -67,6 +69,7 @@ function HomeViewModel() {
         filteredItems: [],
         searchHint: 'word search',
         searchInputType: 'url',
+
         onAddTap: function (args) {
             if (!isFileLoaded) return loadFile();
 
@@ -82,6 +85,7 @@ function HomeViewModel() {
             viewModel.set('searchHint', 'type your new word');
             searchEl.focus();
         },
+
         onStrongToggle: function (args) {
             const isStrong = !viewModel.get('isStrong');
             const items = viewModel.get('items')
@@ -92,6 +96,42 @@ function HomeViewModel() {
             viewModel.set('searchTerm', '');
             args.object.page.getViewById('search').dismissSoftInput();
         },
+
+        onItemTap: function (args) {
+            const context = args.object.bindingContext;
+            const items = context.get('items');
+            const filteredItem = context.get('filteredItems')[args.index];
+            const tappedItemIndex = filteredItem.index;
+            const item = items.find(({ index }) => index === tappedItemIndex);
+            const searchEl = args.object.page.getViewById('search');
+            lastTappedItem = item;
+
+            if (isAdd) {
+                isAdd = false;
+                const text = context.get('searchTerm');
+                items.splice(item.index, 0, { value: text, isStrong: false });
+                const newItems = items.map((item, index) => ({
+                    ...item, index: index + 1,
+                }));
+                viewModel.set('items', newItems);
+                viewModel.set('filteredItems', newItems);
+                viewModel.set('searchTerm', '');
+                viewModel.set('searchHint', 'word search');
+                return searchEl.dismissSoftInput();
+            }
+
+            if (isLongPress) {
+                isLongPress = false;
+                return handleItemLongPress(args);
+            }
+
+            item.isStrong = !item.isStrong;
+            listView = args.object.page.getViewById('listView');
+            listView.refresh();
+
+            return searchEl.dismissSoftInput();
+        },
+
         onItemDoubleTap: function (args) {
             const context = args.object.bindingContext;
             const items = context.get('items')
