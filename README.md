@@ -2,6 +2,12 @@
 
 Dictionary app built in Nativescript
 
+## Instalation
+
+To use the app run "npm run build" and then take the file
+"platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+and copy it to your phone where you can click on it to install the app.
+
 ## User guide
 
 The app was built with minimalistic UI in mind,
