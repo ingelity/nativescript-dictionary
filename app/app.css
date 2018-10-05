@@ -18,3 +18,43 @@ components that have the btn class name.
 .btn {
     font-size: 18;
 }
+
+#page {
+    background-color: #000;
+    color: #fff;
+}
+
+#page .actionBar {
+    background-color: #000;
+    color: #fff;
+}
+
+#search {
+    color: #fff;
+    placeholder-color:#999;
+    border-bottom-width: 1;
+    border-color: #999;
+}
+
+#listView .list-group-item {
+    color: #fff;
+    margin: 0;
+    padding: 6px 20px;
+}
+
+#listView .number {
+    color: #999;
+    font-size: 14;
+    margin-top: 6px;
+}
+
+#listView .word {
+    word-break: break-word;
+    white-space: normal;
+}
+
+#listView .strong {
+    font-weight: bold;
+    color: greenyellow;
+    color: springgreen;
+}
