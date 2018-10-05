@@ -4,7 +4,9 @@ Dictionary app built in Nativescript
 
 ## Instalation
 
-To use the app run "npm run build" and then take the file
+1) Setup nativescript on your OS (https://docs.nativescript.org/start/quick-setup).
+2) From this app's root directory run "npm i" to install required node modules.
+3) To generate the app run "npm run build" and then take the file from
 "platforms/android/app/build/outputs/apk/debug/app-debug.apk"
 and copy it to your phone where you can click on it to install the app.
 
