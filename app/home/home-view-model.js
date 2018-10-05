@@ -79,6 +79,16 @@ function HomeViewModel() {
             viewModel.set('searchHint', 'type your new word');
             searchEl.focus();
         },
+        onStrongToggle: function (args) {
+            const isStrong = !viewModel.get('isStrong');
+            const items = viewModel.get('items')
+                .filter(item => isStrong ? item.isStrong : true);
+
+            viewModel.set('filteredItems', items);
+            viewModel.set('isStrong', isStrong);
+            viewModel.set('searchTerm', '');
+            args.object.page.getViewById('search').dismissSoftInput();
+        },
     function updateLines(text) {
         const items = text.split('\n').map((line, index) => {
             const isStrong = line[0] === '!';
