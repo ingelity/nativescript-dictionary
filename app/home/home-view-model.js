@@ -11,18 +11,13 @@ function HomeViewModel() {
     let filePath = `${downloadDirPath}/dictionary.txt`;
     let isFileLoaded = true;
     let file;
-    app.on(app.suspendEvent, () => {
-        // console.log('suspended');
-        saveFile();
-    });
 
-    app.on(app.exitEvent, () => {
-        // console.log('exiting');
-        saveFile();
-    });
+    app.on(app.suspendEvent, saveFile);
+
+    app.on(app.exitEvent, saveFile);
 
     app.on(app.lowMemoryEvent, () => {
-        console.log('low memory');
+        alert('Running out of memory...');
         saveFile();
     });
 
@@ -58,11 +53,8 @@ function HomeViewModel() {
             .map(({ value, isStrong }) => isStrong ? `!${value}` : value)
             .join('\n');
 
-        // console.log('saving', file.path);
-
         file.writeText(text)
-            // .then(file.readText)
-            .catch(err => console.log('file read err', err));
+            .catch(err => console.log('file save error', err));
     }
 
     const viewModel = observable.fromObject({
