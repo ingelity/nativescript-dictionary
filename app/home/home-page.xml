@@ -13,7 +13,7 @@
         />
         <TextField
             id="search"
-            class="input input-border"
+            class="{{ isDelete ? 'input input-border error' : 'input input-border' }}"
             autocorrect="false"
             autocapitalizationType="none"
             text="{{ searchTerm }}"
@@ -41,7 +41,7 @@
             <ListView.itemTemplate>
                 <FlexboxLayout
                     flexDirection="row"
-                    class="{{ isStrong ? 'strong list-group-item' : 'list-group-item' }}"
+                    class="{{ isDeleted ? 'error list-group-item' : isStrong ? 'strong list-group-item' : 'list-group-item' }}"
                 >
                     <Label
                         text="{{ index }}"

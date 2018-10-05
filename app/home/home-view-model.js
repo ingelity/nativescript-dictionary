@@ -64,6 +64,7 @@ function HomeViewModel() {
 
     const viewModel = observable.fromObject({
         isStrong: false,
+        isDelete: false,
         searchTerm: '',
         items: [],
         filteredItems: [],
@@ -72,6 +73,18 @@ function HomeViewModel() {
 
         onAddTap: function (args) {
             if (!isFileLoaded) return loadFile();
+
+            if (viewModel.get('isDelete')) {
+                const items = viewModel.get('items')
+                    .filter(({ isDeleted }) => !isDeleted)
+                    .map((item, index) => ({ ...item, index: index + 1 }));
+
+                viewModel.set('isDelete', false);
+                viewModel.set('items', items);
+                viewModel.set('filteredItems', items);
+                viewModel.set('searchHint', 'word search');
+                return;
+            }
 
             const searchEl = args.object.page.getViewById('search');
 
@@ -133,13 +146,19 @@ function HomeViewModel() {
         },
 
         onItemDoubleTap: function (args) {
+            lastTappedItem.isDeleted = !lastTappedItem.isDeleted;
+            lastTappedItem.isStrong = false;
             const context = args.object.bindingContext;
-            const items = context.get('items')
-                .filter(({ index }) => index !== lastTappedItem.index)
-                .map((item, index) => ({ ...item, index: index + 1 }));
+            const isDelete = !!context.get('items')
+                .find(({ isDeleted }) => isDeleted);
 
-            context.set('items', items);
-            context.set('filteredItems', items);
+            context.set('isDelete', isDelete);
+            context.set('searchHint', isDelete
+                ? 'tap compose to delete red items'
+                : 'word search'
+            );
+            listView = args.object.page.getViewById('listView');
+            listView.refresh();
         },
 
         onItemLongPress: function () {
