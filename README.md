@@ -29,7 +29,9 @@ Toggle button is for toggling highlighted words.
 
 Single tap on line highlights the line.
 
-Double tap on line deletes the line.
+Double tap on line marks it for deletion. Clicking on compose button
+will delete all lines marked for deletion. Double tapping again on
+line marked for deletion reverts it back to normal state.
 
 Long press on line copies that line's content and the app then asks you to enter
 line number to which you want to copy it.
