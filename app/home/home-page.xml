@@ -18,7 +18,7 @@
             autocapitalizationType="none"
             text="{{ searchTerm }}"
             hint="{{ searchHint }}"
-            width="300"
+            width="{{ searchWidth }}"
             keyboardType="{{ searchInputType }}"
             returnPress="{{ onSearchEnterKeyPress }}"
         />

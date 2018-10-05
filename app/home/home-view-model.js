@@ -1,5 +1,6 @@
 const app = require('tns-core-modules/application');
 const fs = require('tns-core-modules/file-system');
+const platform = require('tns-core-modules/platform');
 const observable = require('data/observable');
 const permissions = require('nativescript-permissions');
 
@@ -63,6 +64,7 @@ function HomeViewModel() {
     }
 
     const viewModel = observable.fromObject({
+        searchWidth: platform.screen.mainScreen.widthDIPs - 100,
         isStrong: false,
         isDelete: false,
         searchTerm: '',
