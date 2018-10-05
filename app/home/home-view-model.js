@@ -11,6 +11,7 @@ function HomeViewModel() {
     let filePath = `${downloadDirPath}/dictionary.txt`;
     let isFileLoaded = true;
     let file;
+    let lastTappedItem;
     let isAdd = false;
 
     app.on(app.suspendEvent, saveFile);
@@ -64,6 +65,7 @@ function HomeViewModel() {
         items: [],
         filteredItems: [],
         searchHint: 'word search',
+        searchInputType: 'url',
         onAddTap: function (args) {
             if (!isFileLoaded) return loadFile();
 
@@ -89,6 +91,23 @@ function HomeViewModel() {
             viewModel.set('searchTerm', '');
             args.object.page.getViewById('search').dismissSoftInput();
         },
+        onSearchEnterKeyPress: function () {
+            const lineNo = viewModel.get('searchTerm');
+            const items = viewModel.get('items');
+
+            if (lineNo <= items.length) {
+                items.splice(lineNo, 0, { ...lastTappedItem, index: lineNo });
+                const newItems = items.map((item, index) => ({
+                    ...item, index: index + 1,
+                }));
+                viewModel.set('items', newItems);
+                viewModel.set('filteredItems', newItems);
+            }
+
+            viewModel.set('searchInputType', 'url');
+            viewModel.set('searchHint', 'word search');
+            viewModel.set('searchTerm', '');
+        }
     function updateLines(text) {
         const items = text.split('\n').map((line, index) => {
             const isStrong = line[0] === '!';
@@ -104,6 +123,7 @@ function HomeViewModel() {
 
     viewModel.on(observable.Observable.propertyChangeEvent, (propChangeData) => {
         if (propChangeData.propertyName === 'searchTerm'
+            && viewModel.get('searchInputType') !== 'number'
             && !isAdd
         ) {
             const term = propChangeData.value.toLowerCase();
