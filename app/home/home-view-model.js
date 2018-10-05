@@ -1,3 +1,4 @@
+const app = require('tns-core-modules/application');
 const fs = require('tns-core-modules/file-system');
 const observable = require('data/observable');
 const permissions = require('nativescript-permissions');
@@ -10,6 +11,24 @@ function HomeViewModel() {
     let filePath = `${downloadDirPath}/dictionary.txt`;
     let isFileLoaded = true;
     let file;
+    app.on(app.suspendEvent, () => {
+        // console.log('suspended');
+        saveFile();
+    });
+
+    app.on(app.exitEvent, () => {
+        // console.log('exiting');
+        saveFile();
+    });
+
+    app.on(app.lowMemoryEvent, () => {
+        console.log('low memory');
+        saveFile();
+    });
+
+    app.on(app.uncaughtErrorEvent, (args) => {
+        console.log('app uncaught error', args.error);
+    });
     permissions.requestPermission([
         android.Manifest.permission.READ_EXTERNAL_STORAGE,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
