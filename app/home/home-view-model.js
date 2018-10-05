@@ -58,6 +58,7 @@ function HomeViewModel() {
     }
 
     const viewModel = observable.fromObject({
+        isStrong: false,
         searchTerm: '',
         items: [],
         filteredItems: [],
@@ -74,6 +75,16 @@ function HomeViewModel() {
         viewModel.set('filteredItems', items);
     }
 
+    viewModel.on(observable.Observable.propertyChangeEvent, (propChangeData) => {
+        if (propChangeData.propertyName === 'searchTerm'
+        ) {
+            const term = propChangeData.value.toLowerCase();
+            const items = viewModel.items.filter(({ value }) =>
+                value.toLowerCase().indexOf(term) > -1,
+            );
+            viewModel.set('filteredItems', items);
+            viewModel.set('isStrong', false);
+        }
     });
 
     return viewModel;
