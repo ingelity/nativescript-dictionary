@@ -21,6 +21,7 @@
             width="{{ searchWidth }}"
             keyboardType="{{ searchInputType }}"
             returnPress="{{ onSearchEnterKeyPress }}"
+            doubleTap="{{ onSearchDoubleTap }}"
         />
         <ActionItem
             tap="{{ onStrongToggle }}"

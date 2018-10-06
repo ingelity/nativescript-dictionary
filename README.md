@@ -41,3 +41,6 @@ entering the contents of your new definition into input field and finally
 clicking on the line after which you want to insert the new definition.
 If you changed your mind and wish to cancel inserting new definition,
 click on the compose button again.
+Double tap on search input enables you to jump to line number. Just enter
+the number of the line that you wish to scroll into view and submit.
+Double tapping again cancels the ongoing action.

@@ -15,6 +15,7 @@ function HomeViewModel() {
     let lastTappedItem;
     let isLongPress = false;
     let isAdd = false;
+    let isJumpToLine = false;
 
     app.on(app.suspendEvent, saveFile);
 
@@ -110,6 +111,20 @@ function HomeViewModel() {
             viewModel.set('isStrong', isStrong);
             viewModel.set('searchTerm', '');
             args.object.page.getViewById('search').dismissSoftInput();
+        onSearchDoubleTap: function (args) {
+            isJumpToLine = !isJumpToLine;
+            viewModel.set('searchInputType', isJumpToLine ? 'number' : 'url');
+            viewModel.set('searchHint', isJumpToLine
+                ? 'enter line number to jump to'
+                : 'word search'
+            );
+
+            if (!isJumpToLine) {
+                viewModel.set('searchTerm', '');
+                setTimeout(() =>
+                    args.object.page.getViewById('search').dismissSoftInput()
+                , 20);
+            }
         },
 
         onItemTap: function (args) {
@@ -167,9 +182,19 @@ function HomeViewModel() {
             isLongPress = true;
         },
 
-        onSearchEnterKeyPress: function () {
+        onSearchEnterKeyPress: function (args) {
             const lineNo = viewModel.get('searchTerm');
             const items = viewModel.get('items');
+
+            if (isJumpToLine) {
+                isJumpToLine = false;
+                viewModel.set('searchInputType', 'url');
+                viewModel.set('searchHint', 'word search');
+                viewModel.set('searchTerm', '');
+
+                const listView = args.object.page.getViewById('list');
+                return listView.scrollToIndex(lineNo - 1);
+            }
 
             if (lineNo <= items.length) {
                 items.splice(lineNo, 0, { ...lastTappedItem, index: lineNo });
