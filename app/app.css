@@ -45,7 +45,7 @@ components that have the btn class name.
 #list .list-group-item {
     color: #fff;
     margin: 0;
-    padding: 6px 20px;
+    padding: 5px 20px;
 }
 
 #list .number {
