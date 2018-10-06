@@ -1,8 +1,8 @@
 # NativescriptTextEditor
 
-Minimalistic text editor app built in Nativescript. Useful for e.g.
-making your own dictionary or note files, but in general suitable for
-any kind of text files editing.
+Minimalistic text editor app built in Nativescript.
+Useful for e.g. making your own dictionary or note files, but in general
+suitable for any kind of text files editing.
 
 ## Instalation
 
