@@ -168,7 +168,7 @@ function HomeViewModel() {
             if (isLongPress) return handleItemLongPress(args);
 
             item.isStrong = !item.isStrong;
-            listView = args.object.page.getViewById('listView');
+            const listView = args.object.page.getViewById('list');
             listView.refresh();
 
             return searchEl.dismissSoftInput();
@@ -186,7 +186,7 @@ function HomeViewModel() {
                 ? 'tap compose to delete red items'
                 : 'word search'
             );
-            listView = args.object.page.getViewById('listView');
+            const listView = args.object.page.getViewById('list');
             listView.refresh();
         },
 

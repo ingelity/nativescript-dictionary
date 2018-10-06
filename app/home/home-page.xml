@@ -32,7 +32,7 @@
     </ActionBar>
     <ScrollView>
         <ListView
-            id="listView"
+            id="list"
             class="list-group"
             items="{{ filteredItems }}"
             itemTap="{{ onItemTap }}"

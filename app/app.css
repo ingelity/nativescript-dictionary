@@ -42,28 +42,28 @@ components that have the btn class name.
     border-color: crimson;
 }
 
-#listView .list-group-item {
+#list .list-group-item {
     color: #fff;
     margin: 0;
     padding: 6px 20px;
 }
 
-#listView .number {
+#list .number {
     color: #999;
     font-size: 14;
     margin-top: 5px;
 }
 
-#listView .word {
+#list .word {
     word-break: break-word;
     white-space: normal;
 }
 
-#listView .strong {
+#list .strong {
     font-weight: bold;
     color: springgreen;
 }
 
-#listView .error {
+#list .error {
     color: crimson;
 }
