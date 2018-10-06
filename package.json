@@ -13,7 +13,8 @@
   "repository": "https://github.com/ingelity/nativescript-dictionary",
   "scripts": {
     "start": "tns run android",
-    "build": "tns build android --compileSdk 23"
+    "build": "tns build android --compileSdk 23",
+    "copy": "cp ./platforms/android/app/build/outputs/apk/debug/app-debug.apk ./NativescriptDictionary.apk"
   },
   "dependencies": {
     "nativescript-permissions": "^1.2.3",
