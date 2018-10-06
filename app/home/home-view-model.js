@@ -103,6 +103,14 @@ function HomeViewModel() {
         },
 
         onStrongToggle: function (args) {
+            if (isLongPress) {
+                isLongPress = false;
+                viewModel.set('searchInputType', 'url');
+                viewModel.set('searchHint', 'word search');
+                viewModel.set('searchTerm', '');
+                return args.object.page.getViewById('search').dismissSoftInput();
+            }
+
             const isStrong = !viewModel.get('isStrong');
             const items = viewModel.get('items')
                 .filter(item => isStrong ? item.isStrong : true);
@@ -157,10 +165,7 @@ function HomeViewModel() {
                 return searchEl.dismissSoftInput();
             }
 
-            if (isLongPress) {
-                isLongPress = false;
-                return handleItemLongPress(args);
-            }
+            if (isLongPress) return handleItemLongPress(args);
 
             item.isStrong = !item.isStrong;
             listView = args.object.page.getViewById('listView');
@@ -212,6 +217,7 @@ function HomeViewModel() {
                 viewModel.set('filteredItems', newItems);
             }
 
+            isLongPress = false;
             viewModel.set('searchInputType', 'url');
             viewModel.set('searchHint', 'word search');
             viewModel.set('searchTerm', '');

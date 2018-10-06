@@ -39,8 +39,9 @@ Double tap on line marks it for deletion. Clicking on compose button
 will delete all lines marked for deletion. Double tapping again on
 line marked for deletion reverts it back to normal state.
 
-Long press on line copies that line's content and the app then asks you to enter
-line number to which you want to copy it.
+Long press on line copies that line's content and the app then asks you
+to enter line number to which you want to copy it.
+Tapping toggle button cancels the ongoing copy action.
 
 Creating a new dictionary entry is done by clicking on compose button,
 then entering the contents of your new definition into input field and
