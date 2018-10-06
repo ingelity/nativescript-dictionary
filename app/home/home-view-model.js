@@ -111,6 +111,13 @@ function HomeViewModel() {
             viewModel.set('isStrong', isStrong);
             viewModel.set('searchTerm', '');
             args.object.page.getViewById('search').dismissSoftInput();
+
+            if (!isStrong) {
+                const listView = args.object.page.getViewById('list');
+                listView.scrollToIndex(lastTappedItem.index - 1);
+            }
+        },
+
         onSearchDoubleTap: function (args) {
             isJumpToLine = !isJumpToLine;
             viewModel.set('searchInputType', isJumpToLine ? 'number' : 'url');

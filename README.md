@@ -26,6 +26,12 @@ On app start enter in the input field the absolute path to the text
 file that you wish to open and click on the compose button.
 
 Toggle button is for toggling highlighted words.
+If you want to be scrolled back into position that you were at before
+showing only highlighted items, please tap on any item prior to tapping
+the toggle button (you can simply e.g. highlight it and unhighlight it).
+The view will scroll you to that item after you toggle into showing all
+of items. This is because Nativescript doesn't yet provide a way to get
+the currently visible item in scroll view.
 
 Single tap on line highlights the line.
 
