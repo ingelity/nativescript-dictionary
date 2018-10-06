@@ -8,8 +8,8 @@ Either take the NativescriptDictionary.apk and jump to step 4 or do all of the s
 
 1) Setup nativescript on your OS (https://docs.nativescript.org/start/quick-setup).
 2) From this app's root directory run "npm i" to install required node modules.
-3) To generate the app run "npm run build" and then take the file from
-"platforms/android/app/build/outputs/apk/debug/app-debug.apk".
+3) To generate the app run "npm run build" and then "npm run copy" to
+extract the NativescriptDictionary.apk file.
 4) Copy the file to your phone where you can click on it to install the app.
 
 ## User guide
