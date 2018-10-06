@@ -1,4 +1,4 @@
-# NativescriptDictionary
+# NativescriptTextEditor
 
 Text editor app built in Nativescript. Useful for e.g. making your own
 dictionary or note files, but in general suitable for any kind of text
@@ -6,12 +6,12 @@ files editing.
 
 ## Instalation
 
-Either take the NativescriptDictionary.apk and jump to step 4 or do all of the steps.
+Either take the NativescriptTextEditor.apk and jump to step 4 or do all of the steps.
 
 1) Setup nativescript on your OS (https://docs.nativescript.org/start/quick-setup).
 2) From this app's root directory run "npm i" to install required node modules.
 3) To generate the app run "npm run build" and then "npm run copy" to
-extract the NativescriptDictionary.apk file.
+extract the NativescriptTextEditor.apk file.
 4) Copy the file to your phone where you can click on it to install the app.
 
 ## User guide
