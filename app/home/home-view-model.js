@@ -1,12 +1,14 @@
 const platform = require('tns-core-modules/platform');
 const observable = require('data/observable');
 const fileIo = require('./file-io');
-function HomeViewModel() {
     let lastTappedItem;
     let isLongPress = false;
     let isAdd = false;
     let isJumpToLine = false;
 
+function HomeViewModel(args) {
+  const listView = args.object.page.getViewById('list');
+  const searchView = args.object.page.getViewById('search');
     isFileLoaded: true,
       if (!viewModel.get('isFileLoaded')) return fileIo.loadFile();
 

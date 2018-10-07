@@ -1,8 +1,8 @@
 <Page
-    class="page"
-    id="page"
-    navigatingTo="onNavigatingTo"
-    xmlns="http://schemas.nativescript.org/tns.xsd"
+  id="page"
+  class="page"
+  loaded="loadApp"
+  xmlns="http://schemas.nativescript.org/tns.xsd"
 >
     <ActionBar class="actionBar">
         <ActionItem
