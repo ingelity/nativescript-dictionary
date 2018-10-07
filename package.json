@@ -18,6 +18,7 @@
     "build": "tns build android --compileSdk 23 && npm run extract"
   },
   "dependencies": {
+    "cryptiles": "^4.1.2",
     "nativescript-permissions": "^1.2.3",
     "nativescript-theme-core": "~1.0.4",
     "tns-core-modules": "~4.2.0"
