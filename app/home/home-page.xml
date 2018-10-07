@@ -4,61 +4,66 @@
   loaded="loadApp"
   xmlns="http://schemas.nativescript.org/tns.xsd"
 >
-    <ActionBar class="actionBar">
-        <ActionItem
-            tap="{{ onAddTap }}"
-            ios.position="left"
-            ios.systemIcon="7"
-            android.systemIcon="ic_menu_compose"
-        />
-        <TextField
-            id="search"
-            class="{{ isDelete ? 'input input-border error' : 'input input-border' }}"
-            autocorrect="false"
-            autocapitalizationType="none"
-            text="{{ searchTerm }}"
-            hint="{{ searchHint }}"
-            width="{{ searchWidth }}"
-            keyboardType="{{ searchInputType }}"
-            returnPress="{{ onSearchEnterKeyPress }}"
-            doubleTap="{{ onSearchDoubleTap }}"
-        />
-        <ActionItem
-            tap="{{ onStrongToggle }}"
-            ios.position="right"
-            ios.systemIcon="13"
-            android.systemIcon="ic_menu_refresh"
-        />
-    </ActionBar>
-    <ScrollView>
-        <ListView
-            id="list"
-            class="list-group"
-            items="{{ filteredItems }}"
-            itemTap="{{ onItemTap }}"
-            doubleTap="{{ onItemDoubleTap }}"
-            longPress="{{ onItemLongPress }}"
+  <ActionBar class="actionBar">
+    <ActionItem
+      tap="{{ onAddTap }}"
+      ios.position="left"
+      ios.systemIcon="7"
+      android.systemIcon="ic_menu_compose"
+    />
+    <TextField
+      id="search"
+      class="{{ isDelete ? 'input input-border error' : 'input input-border' }}"
+      autocorrect="false"
+      autocapitalizationType="none"
+      text="{{ searchTerm }}"
+      hint="{{ searchHint }}"
+      width="{{ searchWidth }}"
+      keyboardType="{{ searchInputType }}"
+      returnPress="{{ onSearchEnterKeyPress }}"
+      doubleTap="{{ onSearchDoubleTap }}"
+    />
+    <ActionItem
+      tap="{{ onToggleTap }}"
+      ios.position="right"
+      ios.systemIcon="13"
+      android.systemIcon="ic_menu_refresh"
+    />
+    <ActionItem
+      tap="{{ onCancelTap }}"
+      ios.position="right"
+      ios.systemIcon="1"
+      android.systemIcon="ic_menu_stop"
+    />
+  </ActionBar>
+  <ScrollView>
+    <ListView
+      id="list"
+      class="list-group"
+      items="{{ filteredItems }}"
+      itemTap="{{ onItemTap }}"
+      doubleTap="{{ onItemDoubleTap }}"
+    >
+      <ListView.itemTemplate>
+        <FlexboxLayout
+            flexDirection="row"
+            class="{{ isDelete ? 'error list-group-item' : isStrong ? 'strong list-group-item' : 'list-group-item' }}"
         >
-            <ListView.itemTemplate>
-                <FlexboxLayout
-                    flexDirection="row"
-                    class="{{ isDeleted ? 'error list-group-item' : isStrong ? 'strong list-group-item' : 'list-group-item' }}"
-                >
-                    <Label
-                        text="{{ index }}"
-                        class="list-group-item-heading number"
-                        verticalAlignment="center"
-                        flexShrink="0"
-                        style="margin-right: 20px"
-                    />
-                    <Label
-                        text="{{ value }}"
-                        class="list-group-item-heading word"
-                        verticalAlignment="center"
-                        flexGrow="1"
-                    />
-                </FlexboxLayout>
-            </ListView.itemTemplate>
-        </ListView>
-    </ScrollView>
+          <Label
+              text="{{ index }}"
+              class="list-group-item-heading number"
+              verticalAlignment="center"
+              flexShrink="0"
+              style="margin-right: 20px"
+          />
+          <Label
+              text="{{ value }}"
+              class="list-group-item-heading word"
+              verticalAlignment="center"
+              flexGrow="1"
+          />
+        </FlexboxLayout>
+      </ListView.itemTemplate>
+    </ListView>
+  </ScrollView>
 </Page>

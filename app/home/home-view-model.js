@@ -1,205 +1,224 @@
 const platform = require('tns-core-modules/platform');
 const observable = require('data/observable');
 const fileIo = require('./file-io');
-    let lastTappedItem;
-    let isLongPress = false;
-    let isAdd = false;
-    let isJumpToLine = false;
 
 function HomeViewModel(args) {
   const listView = args.object.page.getViewById('list');
   const searchView = args.object.page.getViewById('search');
+  let lastTappedItem;
+  let isAdd = false;
+  let isUpdate = 0;
+  let isJumpToLine = false;
+  let escapeScroll = false;
+
+  const viewModel = observable.fromObject({
+    searchWidth: platform.screen.mainScreen.widthDIPs - 150,
     isFileLoaded: true,
+    isStrong: false,
+    isDelete: false,
+    searchTerm: '',
+    items: [],
+    filteredItems: [],
+    searchHint: 'word search',
+    searchInputType: 'url',
+
+    onAddTap: function () {
       if (!viewModel.get('isFileLoaded')) return fileIo.loadFile();
 
+      if (viewModel.get('isDelete')) {
+        const items = viewModel.get('items')
+          .filter(({ isDelete }) => !isDelete)
+          .map((item, index) => ({ ...item, index: index + 1 }));
 
+        viewModel.set('isDelete', false);
+        viewModel.set('items', items);
+        viewModel.set('filteredItems', items);
+        viewModel.set('searchHint', 'word search');
+        return;
+      }
 
+      if (isUpdate) return updateLastTappedItem();
 
-    const viewModel = observable.fromObject({
-        searchWidth: platform.screen.mainScreen.widthDIPs - 100,
-        isStrong: false,
-        isDelete: false,
-        searchTerm: '',
-        items: [],
-        filteredItems: [],
-        searchHint: 'word search',
-        searchInputType: 'url',
+      if (!isAdd) {
+        isAdd = true;
+        viewModel.set('searchHint', 'type your new word');
+        searchView.focus();
+        return;
+      }
 
-        onAddTap: function (args) {
+      clearState();
+    },
 
-            if (viewModel.get('isDelete')) {
-                const items = viewModel.get('items')
-                    .filter(({ isDeleted }) => !isDeleted)
-                    .map((item, index) => ({ ...item, index: index + 1 }));
+    onToggleTap: function () {
+      let items;
+      const isStrong = !viewModel.get('isStrong');
+      const isDelete = viewModel.get('isDelete');
+      const condition = isDelete ? 'isDelete' : 'isStrong';
 
-                viewModel.set('isDelete', false);
-                viewModel.set('items', items);
-                viewModel.set('filteredItems', items);
-                viewModel.set('searchHint', 'word search');
-                return;
-            }
+      items = viewModel.get('items')
+        .filter(item => isStrong ? item[condition] : true);
 
-            const searchEl = args.object.page.getViewById('search');
+      if (!isDelete) setSearchDefaults(viewModel);
 
-            if (isAdd) {
-                isAdd = false;
-                viewModel.set('searchHint', 'word search');
-                return searchEl.dismissSoftInput();
-            }
+      console.log(isDelete, isStrong, items.length)
+      viewModel.set('isStrong', isStrong);
+      viewModel.set('filteredItems', items);
 
-            isAdd = true;
-            viewModel.set('searchHint', 'type your new word');
-            searchEl.focus();
-        },
+      if (!isStrong && !isDelete && lastTappedItem) {
+        listView.scrollToIndex(lastTappedItem.index - 1);
+      }
+    },
 
-        onStrongToggle: function (args) {
-            if (isLongPress) {
-                isLongPress = false;
-                viewModel.set('searchInputType', 'url');
-                viewModel.set('searchHint', 'word search');
-                viewModel.set('searchTerm', '');
-                return args.object.page.getViewById('search').dismissSoftInput();
-            }
+    onCancelTap: function () {
+      if (isAdd || isUpdate || isJumpToLine) return clearState();
 
-            const isStrong = !viewModel.get('isStrong');
-            const items = viewModel.get('items')
-                .filter(item => isStrong ? item.isStrong : true);
+      const isDelete = viewModel.get('isDelete');
+      viewModel.set('isDelete', !isDelete);
+      clearState();
 
-            viewModel.set('filteredItems', items);
-            viewModel.set('isStrong', isStrong);
-            viewModel.set('searchTerm', '');
-            args.object.page.getViewById('search').dismissSoftInput();
-
-            if (!isStrong) {
-                const listView = args.object.page.getViewById('list');
-                listView.scrollToIndex(lastTappedItem.index - 1);
-            }
-        },
-
-        onSearchDoubleTap: function (args) {
-            isJumpToLine = !isJumpToLine;
-            viewModel.set('searchInputType', isJumpToLine ? 'number' : 'url');
-            viewModel.set('searchHint', isJumpToLine
-                ? 'enter line number to jump to'
-                : 'word search'
-            );
-
-            if (!isJumpToLine) {
-                viewModel.set('searchTerm', '');
-                setTimeout(() =>
-                    args.object.page.getViewById('search').dismissSoftInput()
-                , 20);
-            }
-        },
-
-        onItemTap: function (args) {
-            const context = args.object.bindingContext;
-            const items = context.get('items');
-            const filteredItem = context.get('filteredItems')[args.index];
-            const tappedItemIndex = filteredItem.index;
-            const item = items.find(({ index }) => index === tappedItemIndex);
-            const searchEl = args.object.page.getViewById('search');
-            lastTappedItem = item;
-
-            if (isAdd) {
-                isAdd = false;
-                const text = context.get('searchTerm');
-                items.splice(item.index, 0, { value: text, isStrong: false });
-                const newItems = items.map((item, index) => ({
-                    ...item, index: index + 1,
-                }));
-                viewModel.set('items', newItems);
-                viewModel.set('filteredItems', newItems);
-                viewModel.set('searchTerm', '');
-                viewModel.set('searchHint', 'word search');
-                return searchEl.dismissSoftInput();
-            }
-
-            if (isLongPress) return handleItemLongPress(args);
-
-            item.isStrong = !item.isStrong;
-            const listView = args.object.page.getViewById('list');
-            listView.refresh();
-
-            return searchEl.dismissSoftInput();
-        },
-
-        onItemDoubleTap: function (args) {
-            lastTappedItem.isDeleted = !lastTappedItem.isDeleted;
-            lastTappedItem.isStrong = false;
-            const context = args.object.bindingContext;
-            const isDelete = !!context.get('items')
-                .find(({ isDeleted }) => isDeleted);
-
-            context.set('isDelete', isDelete);
-            context.set('searchHint', isDelete
-                ? 'tap compose to delete red items'
-                : 'word search'
-            );
-            const listView = args.object.page.getViewById('list');
-            listView.refresh();
-        },
-
-        onItemLongPress: function () {
-            isLongPress = true;
-        },
-
-        onSearchEnterKeyPress: function (args) {
-            const lineNo = viewModel.get('searchTerm');
-            const items = viewModel.get('items');
-
-            if (isJumpToLine) {
-                isJumpToLine = false;
-                viewModel.set('searchInputType', 'url');
-                viewModel.set('searchHint', 'word search');
-                viewModel.set('searchTerm', '');
-
-                const listView = args.object.page.getViewById('list');
-                return listView.scrollToIndex(lineNo - 1);
-            }
-
-            if (lineNo <= items.length) {
-                items.splice(lineNo, 0, { ...lastTappedItem, index: lineNo });
-                const newItems = items.map((item, index) => ({
-                    ...item, index: index + 1,
-                }));
-                viewModel.set('items', newItems);
-                viewModel.set('filteredItems', newItems);
-            }
-
-            isLongPress = false;
-            viewModel.set('searchInputType', 'url');
-            viewModel.set('searchHint', 'word search');
-            viewModel.set('searchTerm', '');
-        }
-    });
-
-    function handleItemLongPress(args) {
-        viewModel.set('searchInputType', 'number');
-        viewModel.set('searchHint', 'line number to copy to');
-        args.object.page.getViewById('search').focus();
-    }
+      if (isDelete) {
+        const items = viewModel.get('items')
+          .map(item => ({ ...item, isDelete: false }));
 
         viewModel.set('items', items);
         viewModel.set('filteredItems', items);
+      } else {
+        viewModel.set('searchHint', 'select items to delete');
+      }
+    },
+
+    onSearchDoubleTap: function () {
+      isJumpToLine = !isJumpToLine;
+
+      if (!isJumpToLine) return clearState();
+
+      viewModel.set('searchInputType', 'number');
+      viewModel.set('searchHint', 'enter line number to jump to');
+    },
+
+    onItemTap: function (args) {
+      const context = args.object.bindingContext;
+      const items = context.get('items');
+      const filteredItem = context.get('filteredItems')[args.index];
+      const tappedItemIndex = filteredItem.index;
+      const item = items.find(({ index }) => index === tappedItemIndex);
+
+      // copy-insert lastTappedItem's contents to a tapped line
+      if (isUpdate === 2) {
+        items.splice(item.index, 0, { ...lastTappedItem });
+        lastTappedItem = item;
+        const newItems = remapItems(items);
+        context.set('items', newItems);
+        context.set('filteredItems', newItems);
+        escapeScroll = true;
+        clearState(context);
+        return;
+      }
+
+      // escape the second tap of the doubleTap
+      if (isUpdate === 1) isUpdate = 2;
+
+      lastTappedItem = item;
+
+      if (context.get('isDelete')) {
+        item.isDelete = !item.isDelete;
+        const deleteItemsCount = items.filter(({ isDelete }) => isDelete).length;
+
+        context.set('isDelete', !!deleteItemsCount);
+        context.set('searchHint', deleteItemsCount
+          ? `${deleteItemsCount} item${deleteItemsCount === 1 ? '' : 's'} to delete`
+          : 'word search'
+        );
+
+        listView.refresh();
+        return;
+      }
+
+      if (isAdd) {
+        const text = context.get('searchTerm');
+        items.splice(item.index, 0, { value: text, isStrong: false });
+        const newItems = remapItems(items);
+        context.set('items', newItems);
+        context.set('filteredItems', newItems);
+        clearState(context);
+        return;
+      }
+
+      item.isStrong = !item.isStrong;
+      listView.refresh();
+    },
+
+    onItemDoubleTap: function () {
+      clearState();
+      isUpdate = 1;
+      viewModel.set('searchTerm', lastTappedItem.value);
+    },
+
+    onSearchEnterKeyPress: function () {
+      if (isJumpToLine) {
+        const lineNo = parseInt(viewModel.get('searchTerm'), 10) - 1;
+        listView.scrollToIndex(lineNo);
+      }
+
+      if (isUpdate) return updateLastTappedItem();
+
+      clearState();
     }
+  });
+
+  function updateLastTappedItem() {
+    lastTappedItem.value = viewModel.get('searchTerm');
+    listView.refresh();
+    clearState();
+  }
+
+  function remapItems(items) {
+    return items.map((item, index) => ({ ...item, index: index + 1 }));
+  }
+
+  // used to cancel any ongoing action and clear up after any action
+  function clearState(context) {
+    setSearchDefaults(viewModel || context);
+    isAdd = false;
+    isUpdate = 0;
+    isJumpToLine = false;
+  }
+
+  function setSearchDefaults(viewModel) {
+    viewModel.set('searchTerm', '');
+    viewModel.set('searchInputType', 'url');
+    viewModel.set('searchHint', 'word search');
+
+    // a small delay because os can decide to show a wrong keyboard
+    setTimeout(() => searchView.dismissSoftInput(), 20);
+  }
+
+  viewModel.on(observable.Observable.propertyChangeEvent, (propChangeData) => {
+    if (propChangeData.propertyName === 'searchTerm'
+      && !isAdd
+      && !isUpdate
+      && !isJumpToLine
+      && viewModel.get('searchInputType') !== 'number'
+    ) {
+      const term = propChangeData.value.toLowerCase();
+      const items = viewModel.items.filter(({ value }) =>
+        value.toLowerCase().indexOf(term) > -1,
+      );
+      viewModel.set('filteredItems', items);
+      viewModel.set('isStrong', false);
+      viewModel.set('isDelete', false);
+
+      if (escapeScroll) return escapeScroll = false;
+
+      if (term === '' && lastTappedItem) {
+        listView.scrollToIndex(lastTappedItem.index - 1);
+      }
+    }
+  });
+
   fileIo(viewModel);
 
-    viewModel.on(observable.Observable.propertyChangeEvent, (propChangeData) => {
-        if (propChangeData.propertyName === 'searchTerm'
-            && viewModel.get('searchInputType') !== 'number'
-            && !isAdd
-        ) {
-            const term = propChangeData.value.toLowerCase();
-            const items = viewModel.items.filter(({ value }) =>
-                value.toLowerCase().indexOf(term) > -1,
-            );
-            viewModel.set('filteredItems', items);
-            viewModel.set('isStrong', false);
-        }
-    });
-
-    return viewModel;
+  return viewModel;
 }
 
 module.exports = HomeViewModel;
