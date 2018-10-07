@@ -60,7 +60,6 @@ function HomeViewModel(args) {
 
       if (!isDelete) setSearchDefaults(viewModel);
 
-      console.log(isDelete, isStrong, items.length)
       viewModel.set('isStrong', isStrong);
       viewModel.set('filteredItems', items);
 
