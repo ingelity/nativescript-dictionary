@@ -10,11 +10,12 @@
   },
   "description": "NativeScript TextEditor Application",
   "license": "Apache License 2.0",
+  "author": "https://github.com/ingelity",
   "repository": "https://github.com/ingelity/nativescript-text-editor",
   "scripts": {
     "start": "tns run android",
-    "build": "tns build android --compileSdk 23",
-    "copy": "cp ./platforms/android/app/build/outputs/apk/debug/app-debug.apk ./NativescriptTextEditor.apk"
+    "extract": "cp ./platforms/android/app/build/outputs/apk/debug/app-debug.apk ./NativescriptTextEditor.apk",
+    "build": "tns build android --compileSdk 23 && npm run extract"
   },
   "dependencies": {
     "nativescript-permissions": "^1.2.3",
