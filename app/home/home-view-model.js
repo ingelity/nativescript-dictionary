@@ -134,7 +134,7 @@ function HomeViewModel(args) {
 
       if (isAdd) {
         const text = context.get('searchTerm');
-        items.splice(item.index, 0, { value: text, isStrong: false });
+        items.splice(item.index - 1, 0, { value: text, isStrong: false });
         const newItems = remapItems(items);
         context.set('items', newItems);
         context.set('filteredItems', newItems);
