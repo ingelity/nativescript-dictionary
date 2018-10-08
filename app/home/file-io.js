@@ -56,6 +56,7 @@ function FileIo(viewModel) {
     });
     viewModel.set('items', items);
     viewModel.set('filteredItems', items);
+    viewModel.set('searchHint', `word search (${items.length} entries)`);
   }
 
   function saveFile() {

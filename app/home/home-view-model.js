@@ -33,7 +33,7 @@ function HomeViewModel(args) {
         viewModel.set('isDelete', false);
         viewModel.set('items', items);
         viewModel.set('filteredItems', items);
-        viewModel.set('searchHint', 'word search');
+        setDefaultSearchHint(viewModel);
         return;
       }
 
@@ -126,7 +126,7 @@ function HomeViewModel(args) {
         context.set('isDelete', !!deleteItemsCount);
         context.set('searchHint', deleteItemsCount
           ? `${deleteItemsCount} item${deleteItemsCount === 1 ? '' : 's'} to delete`
-          : 'word search'
+          : setDefaultSearchHint(context)
         );
 
         listView.refresh();
@@ -183,10 +183,15 @@ function HomeViewModel(args) {
     isJumpToLine = false;
   }
 
+  function setDefaultSearchHint(viewModel) {
+    const count = viewModel.get('items').length;
+    viewModel.set('searchHint', `word search (${count} entries)`);
+  }
+
   function setSearchDefaults(viewModel) {
     viewModel.set('searchTerm', '');
     viewModel.set('searchInputType', 'url');
-    viewModel.set('searchHint', 'word search');
+    setDefaultSearchHint(viewModel);
 
     // a small delay because os can decide to show a wrong keyboard
     setTimeout(() => searchView.dismissSoftInput(), 20);
