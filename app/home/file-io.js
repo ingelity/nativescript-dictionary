@@ -2,7 +2,7 @@ const app = require('tns-core-modules/application');
 const fs = require('tns-core-modules/file-system');
 const permissions = require('nativescript-permissions');
 
-function FileIo(viewModel) {
+function FileIo(page) {
   const env = android.os.Environment;
   const downloadDirPath = env.getExternalStoragePublicDirectory(env.DIRECTORY_DOWNLOADS);
   let filePath = `${downloadDirPath}/dictionary.txt`;
@@ -27,6 +27,7 @@ function FileIo(viewModel) {
   ]).then(loadFile);
 
   function loadFile() {
+    const viewModel = page.bindingContext;
     const path = viewModel.get('searchTerm') || filePath;
     if (!fs.File.exists(path)) {
       viewModel.set('isFileLoaded', false);
@@ -46,6 +47,7 @@ function FileIo(viewModel) {
   }
 
   function updateLines(text) {
+    const viewModel = page.bindingContext;
     const items = text.split('\n').map((line, index) => {
       const isStrong = line[0] === '!';
       return ({
@@ -62,6 +64,7 @@ function FileIo(viewModel) {
   function saveFile() {
     if (!file) return console.log('File not loaded');
 
+    const viewModel = page.bindingContext;
     const text = viewModel.get('items')
       .map(({ value, isStrong }) => isStrong ? `!${value}` : value)
       .join('\n');

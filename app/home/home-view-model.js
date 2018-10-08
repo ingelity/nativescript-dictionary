@@ -1,6 +1,5 @@
 const platform = require('tns-core-modules/platform');
 const observable = require('data/observable');
-const fileIo = require('./file-io');
 
 function HomeViewModel(args) {
   const listView = args.object.page.getViewById('list');
@@ -220,7 +219,6 @@ function HomeViewModel(args) {
     }
   });
 
-  fileIo(viewModel);
 
   return viewModel;
 }

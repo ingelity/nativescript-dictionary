@@ -5,10 +5,13 @@ logic, and to set up your page’s data binding.
 */
 
 const HomeViewModel = require("./home-view-model");
+const fileIo = require('./file-io');
 
 function loadApp(args) {
   const page = args.object;
-  page.bindingContext = new HomeViewModel(args);
+  const viewModel = new HomeViewModel(args);
+  page.bindingContext = viewModel;
+  fileIo(page);
 }
 
 exports.loadApp = loadApp;
