@@ -6,8 +6,12 @@ logic, and to set up your page’s data binding.
 
 const HomeViewModel = require("./home-view-model");
 const fileIo = require('./file-io');
+let isLoaded = false;
 
 function loadApp(args) {
+  if (isLoaded) return;
+
+  isLoaded = true;
   const page = args.object;
   const viewModel = new HomeViewModel(args);
   page.bindingContext = viewModel;
